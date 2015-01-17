@@ -1,0 +1,41 @@
+{
+  "name": "app.init",
+  "version": "1.0.1",
+  "description": "Модуль для инициализации приложений.",
+  "contributors": [
+    {
+      "name": "Sergei Korenkov",
+      "email": "classtype@mail.ru"
+    },
+    {
+      "name": "Aleksandr Balyunov",
+      "email": "albalyu@gmail.com"
+    }
+  ],
+  "main": "src/app.init.js",
+  "homepage": "http://github.com/classtype/app.init",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/classtype/app.init.git"
+  },
+  "bugs": {
+    "url": "http://github.com/classtype/app.init/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://github.com/classtype/app.init/blob/master/LICENSE"
+    }
+  ],
+  "keywords": [
+    "Модуль для инициализации приложений.",
+    "application",
+    "app",
+    "init"
+  ],
+  "dependencies": {
+    "classtype": "latest",
+    "console.dump": "latest",
+    "colors": "1.0.3"
+  }
+}
