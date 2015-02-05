@@ -98,6 +98,12 @@
 // Переопределяем $
     global.$ = {};
     
+// Для вывода цветов
+    Object.defineProperty($, 'Colors', {
+            value: colors
+        }
+    );
+    
 // Для создания динамических классов
     Object.defineProperty($, 'CT', {
             value: CT
