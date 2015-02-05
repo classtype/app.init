@@ -1,6 +1,6 @@
 {
   "name": "app.init",
-  "version": "1.0.3",
+  "version": "1.0.5",
   "description": "Модуль для инициализации приложений.",
   "contributors": [
     {
@@ -34,7 +34,7 @@
     "init"
   ],
   "dependencies": {
-    "classtype": "latest",
+    "ct": "latest",
     "console.dump": "latest",
     "colors": "1.0.3"
   }

@@ -3,7 +3,7 @@
     var fs = require('fs');
     var path = require('path');
     var colors = require('colors/safe');
-    var CT = require('classtype');
+    var CT = require('ct');
     require('console.dump');
     
 //--------------------------------------------------------------------------------------------------
@@ -111,11 +111,8 @@
     );
     
 // Для создания статических классов
-    var extend = function() {
-        return new (CT.extend.apply(CT, arguments));
-    };
     Object.defineProperty($, 'extend', {
-            value: extend
+            value: CT.static
         }
     );
     
