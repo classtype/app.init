@@ -165,7 +165,7 @@
 // Инициализирует загрузку модулей
     module.exports = function() {
     // Инициализируем загрузку модулей
-        loadModules(process.cwd(), arguments);
+        loadModules(path.dirname(module.parent.filename), arguments);
     };
     
 //--------------------------------------------------------------------------------------------------
