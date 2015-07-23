@@ -4,7 +4,6 @@
     var path = require('path');
     var colors = require('colors/safe');
     var CT = require('ct');
-    require('console.dump');
     
 //--------------------------------------------------------------------------------------------------
 
@@ -98,12 +97,6 @@
 // Переопределяем $
     global.$ = {};
     
-// Для вывода цветов
-    Object.defineProperty($, 'Colors', {
-            value: colors
-        }
-    );
-    
 // Для создания динамических классов
     Object.defineProperty($, 'CT', {
             value: CT
@@ -160,12 +153,42 @@
         }
     };
     
-    
-    
-// Инициализирует загрузку модулей
+/*--------------------------------------------------------------------------------------------------
+|
+| -> Инициализирует загрузку модулей
+|
+|-------------------------------------------------------------------------------------------------*/
+
     module.exports = function() {
-    // Инициализируем загрузку модулей
-        loadModules(path.dirname(module.parent.filename), arguments);
+    // Список аргументов
+        var args = arguments;
+        
+    // Базовые модули
+        if (typeof args[0] == 'object') {
+        // Инициализируем загрузку пользовательских модулей
+            loadModules(path.dirname(module.parent.filename), args[1]);
+            
+        // Проходим по списку базовых модулей
+            for (var i = 0; i < args[0].length; i++) {
+            // Получения дампа объекта
+                if (args[0][i] == 'console.dump') {
+                    require('console.dump');
+                }
+                
+            // Вывод цветов
+                if (args[0][i] == 'Colors') {
+                    Object.defineProperty($, 'Colors', {
+                            value: colors
+                        }
+                    );
+                }
+            }
+        }
+        
+    // Только пользовательские модули
+        else {
+            loadModules(path.dirname(module.parent.filename), args);
+        }
     };
     
 //--------------------------------------------------------------------------------------------------

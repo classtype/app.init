@@ -1,4 +1,5 @@
-console.log('inti');
+console.log('$.War.name: ' + $.War.name);
+/*
 setTimeout(function() {
     $.aaa();
 }, 0);
@@ -12,3 +13,4 @@ setTimeout(function() {
     }
 }, 4000);
 setTimeout(function(){}, 10000000);
+*/
