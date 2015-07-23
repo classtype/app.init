@@ -112,7 +112,7 @@
     
 // Для создания статических классов
     Object.defineProperty($, 'extend', {
-            value: CT.static
+            value: CT.static.extend
         }
     );
     
