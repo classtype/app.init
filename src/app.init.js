@@ -36,8 +36,8 @@
             
         // Разбиваем строку с ошибкой на три подстроки
             var line1 = script.substr(0, columnNumber);
-            var line2 = script.substr(columnNumber, error.arguments[0].length + 1);
-            var line3 = script.substr(columnNumber + error.arguments[0].length + 1);
+            var line2 = script.substr(columnNumber, lineNumber + 1);
+            var line3 = script.substr(columnNumber + lineNumber + 1);
             
         // Две строки перед строкой с ошибкой и две после
             var code = [];
