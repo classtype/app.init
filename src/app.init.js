@@ -165,9 +165,6 @@
         
     // Базовые модули
         if (typeof args[0] == 'object') {
-        // Инициализируем загрузку пользовательских модулей
-            loadModules(path.dirname(module.parent.filename), args[1]);
-            
         // Проходим по списку базовых модулей
             for (var i = 0; i < args[0].length; i++) {
             // Получения дампа объекта
@@ -183,6 +180,9 @@
                     );
                 }
             }
+            
+        // Инициализируем загрузку пользовательских модулей
+            loadModules(path.dirname(module.parent.filename), args[1]);
         }
         
     // Только пользовательские модули
