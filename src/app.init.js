@@ -167,6 +167,11 @@
         if (typeof args[0] == 'object') {
         // Проходим по списку базовых модулей
             for (var i = 0; i < args[0].length; i++) {
+            // Выводит ошибку в консоль
+                if (args[0][i] == 'ErrorLog') {
+                    $.ErrorLog = code_error;
+                }
+                
             // Получения дампа объекта
                 if (args[0][i] == 'console.dump') {
                     require('console.dump');
