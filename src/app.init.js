@@ -172,6 +172,14 @@
                     $.ErrorLog = code_error;
                 }
                 
+            // Работа с JSON файлами
+                if (args[0][i] == 'JSONFiles') {
+                    Object.defineProperty($, 'JSONFiles', {
+                            value: require('./JSONFiles')
+                        }
+                    );
+                }
+                
             // Получения дампа объекта
                 if (args[0][i] == 'console.dump') {
                     require('console.dump');
