@@ -145,7 +145,6 @@ module.exports = function(_path) {
                 fs.readFile(_path, 'utf8', function(err, _source) {
                     try {
                         var _json = JSON.parse(_source);
-                        callback.call({path: _path, json: _json, source: _source}, 'good', _json, _source, _path);
                     }
                     
                     catch (e) {
@@ -154,6 +153,8 @@ module.exports = function(_path) {
                         error_msg = 'Файл содержит не правильный JSON!';
                         return _error(_path, err, error_code, error_msg, callback);
                     }
+                    
+                    callback.call({path: _path, json: _json, source: _source}, 'good', _json, _source, _path);
                 });
             });
         });
