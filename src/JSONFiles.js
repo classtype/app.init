@@ -23,9 +23,10 @@ module.exports = function(_path) {
 |
 |-------------------------------------------------------------------------------------------------*/
 
-    _t.Error = function(path, err, error_msg, callback) {
+    _t.Error = function(path, err, error_code, error_msg, callback) {
         callback.call({
             path: path,
+            error_code: error_code,
             error_msg: error_msg+'\nПуть: "'+path+'"',
             err: err
         }, 'error');
@@ -38,12 +39,14 @@ module.exports = function(_path) {
 |-------------------------------------------------------------------------------------------------*/
 
     _t.add = function(fileName, _json, callback) {
+        var error_code = 0;
         var error_msg = '';
         
         fs.stat(_pathStorage, function(err, stats) {
             if (err) {
+                error_code = 101;
                 error_msg = 'Каталог не найден!';
-                return _t.Error(_pathStorage, err, error_msg, callback);
+                return _t.Error(_pathStorage, err, error_code, error_msg, callback);
             }
             
             var _path = path.join(_pathStorage, fileName+'');
@@ -52,23 +55,27 @@ module.exports = function(_path) {
             fs.stat(_path, function(err, stats) {
                 if (!err) {
                     if (stats.isFile()) {
+                        error_code = 102;
                         error_msg = 'Файл с таким именем уже существует!';
-                        return _t.Error(_path, err, error_msg, callback);
+                        return _t.Error(_path, err, error_code, error_msg, callback);
                     }
                     
                     if (stats.isDirectory()) {
+                        error_code = 103;
                         error_msg = 'Каталог с таким именем уже существует!';
-                        return _t.Error(_path, err, error_msg, callback);
+                        return _t.Error(_path, err, error_code, error_msg, callback);
                     }
                     
+                    error_code = 104;
                     error_msg = 'Неизвестная ошибка #1!';
-                    return _t.Error(_path, err, error_msg, callback);
+                    return _t.Error(_path, err, error_code, error_msg, callback);
                 }
                 
                 fs.writeFile(_path, _source, 'utf8', function(err) {
                     if (err) {
+                        error_code = 105;
                         error_msg = 'Неизвестная ошибка #2!';
-                        return _t.Error(_path, err, error_msg, callback);
+                        return _t.Error(_path, err, error_code, error_msg, callback);
                     }
                     callback.call({path: _path, json: _json, source: _source}, 'good');
                 });
@@ -83,20 +90,23 @@ module.exports = function(_path) {
 |-------------------------------------------------------------------------------------------------*/
 
     _t.del = function(fileName, callback) {
+        var error_code = 0;
         var error_msg = '';
         
         fs.stat(_pathStorage, function(err, stats) {
             if (err) {
+                error_code = 201;
                 error_msg = 'Каталог не найден!';
-                return _t.Error(_pathStorage, err, error_msg, callback);
+                return _t.Error(_pathStorage, err, error_code, error_msg, callback);
             }
             
             var _path = path.join(_pathStorage, fileName+'');
             
             fs.stat(_path, function(err, stats) {
                 if (err || !stats.isFile()) {
+                    error_code = 202;
                     error_msg = 'Файл не найден!';
-                    return _t.Error(_path, err, error_msg, callback);
+                    return _t.Error(_path, err, error_code, error_msg, callback);
                 }
                 
                 fs.unlink(_path, function(err) {
@@ -113,20 +123,23 @@ module.exports = function(_path) {
 |-------------------------------------------------------------------------------------------------*/
 
     _t.get = function(fileName, callback) {
+        var error_code = 0;
         var error_msg = '';
         
         fs.stat(_pathStorage, function(err, stats) {
             if (err) {
+                error_code = 301;
                 error_msg = 'Каталог не найден!';
-                return _t.Error(_pathStorage, err, error_msg, callback);
+                return _t.Error(_pathStorage, err, error_code, error_msg, callback);
             }
             
             var _path = path.join(_pathStorage, fileName+'');
             
             fs.stat(_path, function(err, stats) {
                 if (err || !stats.isFile()) {
+                    error_code = 302;
                     error_msg = 'Файл не найден!';
-                    return _t.Error(_path, err, error_msg, callback);
+                    return _t.Error(_path, err, error_code, error_msg, callback);
                 }
                 
                 fs.readFile(_path, 'utf8', function(err, _source) {
@@ -137,8 +150,9 @@ module.exports = function(_path) {
                     
                     catch (e) {
                         ErrorLog(e);
+                        error_code = 303;
                         error_msg = 'Файл содержит не правильный JSON!';
-                        return _t.Error(_path, err, error_msg, callback);
+                        return _t.Error(_path, err, error_code, error_msg, callback);
                     }
                 });
             });
@@ -152,12 +166,14 @@ module.exports = function(_path) {
 |-------------------------------------------------------------------------------------------------*/
 
     _t.set = function(fileName, _json, callback) {
+        var error_code = 0;
         var error_msg = '';
         
         fs.stat(_pathStorage, function(err, stats) {
             if (err) {
+                error_code = 401;
                 error_msg = 'Каталог не найден!';
-                return _t.Error(_pathStorage, err, error_msg, callback);
+                return _t.Error(_pathStorage, err, error_code, error_msg, callback);
             }
             
             var _path = path.join(_pathStorage, fileName+'');
@@ -165,14 +181,16 @@ module.exports = function(_path) {
             
             fs.stat(_path, function(err, stats) {
                 if (err || !stats.isFile()) {
+                    error_code = 402;
                     error_msg = 'Файл не найден!';
-                    return _t.Error(_path, err, error_msg, callback);
+                    return _t.Error(_path, err, error_code, error_msg, callback);
                 }
                 
                 fs.writeFile(_path, _source, 'utf8', function(err) {
                     if (err) {
+                        error_code = 403;
                         error_msg = 'Неизвестная ошибка!';
-                        return _t.Error(_path, err, error_msg, callback);
+                        return _t.Error(_path, err, error_code, error_msg, callback);
                     }
                     callback.call({path: _path, json: _json, source: _source}, 'good');
                 });
