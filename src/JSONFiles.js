@@ -2,6 +2,7 @@
 
 var fs = require('fs');
 var path = require('path');
+var ErrorLog = require('./ErrorLog');// Выводит ошибку в консоль
 
 //--------------------------------------------------------------------------------------------------
 
@@ -131,6 +132,7 @@ module.exports = function(_path) {
                     }
                     
                     catch (e) {
+                        ErrorLog(e);
                         error_msg = 'Файл содержит не правильный JSON!';
                         return _t.Error(_path, err, error_msg, callback);
                     }
