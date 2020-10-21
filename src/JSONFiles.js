@@ -61,13 +61,13 @@ module.exports = function(_path) {
                         return _t.Error(_path, err, error_msg, callback);
                     }
                     
-                    error_msg = '1Неизвестная ошибка!';
+                    error_msg = 'Неизвестная ошибка #1!';
                     return _t.Error(_path, err, error_msg, callback);
                 }
                 
                 fs.writeFile(_path, _source, 'utf8', function(err) {
                     if (err) {
-                        error_msg = '2Неизвестная ошибка!';
+                        error_msg = 'Неизвестная ошибка #2!';
                         return _t.Error(_path, err, error_msg, callback);
                     }
                     callback.call({path: _path, json: _json, source: _source}, 'good');
@@ -83,6 +83,8 @@ module.exports = function(_path) {
 |-------------------------------------------------------------------------------------------------*/
 
     _t.del = function(fileName, callback) {
+        var error_msg = '';
+        
         fs.stat(_pathStorage, function(err, stats) {
             if (err) {
                 error_msg = 'Каталог не найден!';
@@ -111,6 +113,8 @@ module.exports = function(_path) {
 |-------------------------------------------------------------------------------------------------*/
 
     _t.get = function(fileName, callback) {
+        var error_msg = '';
+        
         fs.stat(_pathStorage, function(err, stats) {
             if (err) {
                 error_msg = 'Каталог не найден!';
@@ -148,6 +152,8 @@ module.exports = function(_path) {
 |-------------------------------------------------------------------------------------------------*/
 
     _t.set = function(fileName, _json, callback) {
+        var error_msg = '';
+        
         fs.stat(_pathStorage, function(err, stats) {
             if (err) {
                 error_msg = 'Каталог не найден!';
