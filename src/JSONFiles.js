@@ -14,7 +14,7 @@ module.exports = function(_path) {
 |-------------------------------------------------------------------------------------------------*/
 
     var _t = this;// Указатель
-    var _pathStorage = path.join(path.dirname(process.mainModule.filename), _path);// Путь к файлам
+    var _pathStorage = path.join(path.dirname(process.mainModule.filename), _path+'');// Путь к файлам
     
 /*--------------------------------------------------------------------------------------------------
 |
@@ -45,7 +45,7 @@ module.exports = function(_path) {
                 return _t.Error(_pathStorage, err, error_msg, callback);
             }
             
-            var _path = path.join(_pathStorage, fileName);
+            var _path = path.join(_pathStorage, fileName+'');
             var _source = JSON.stringify(_json);
             
             fs.stat(_path, function(err, stats) {
@@ -88,7 +88,7 @@ module.exports = function(_path) {
                 return _t.Error(_pathStorage, err, error_msg, callback);
             }
             
-            var _path = path.join(_pathStorage, fileName);
+            var _path = path.join(_pathStorage, fileName+'');
             
             fs.stat(_path, function(err, stats) {
                 if (err || !stats.isFile()) {
@@ -116,7 +116,7 @@ module.exports = function(_path) {
                 return _t.Error(_pathStorage, err, error_msg, callback);
             }
             
-            var _path = path.join(_pathStorage, fileName);
+            var _path = path.join(_pathStorage, fileName+'');
             
             fs.stat(_path, function(err, stats) {
                 if (err || !stats.isFile()) {
@@ -152,7 +152,7 @@ module.exports = function(_path) {
                 return _t.Error(_pathStorage, err, error_msg, callback);
             }
             
-            var _path = path.join(_pathStorage, fileName);
+            var _path = path.join(_pathStorage, fileName+'');
             var _source = JSON.stringify(_json);
             
             fs.stat(_path, function(err, stats) {
@@ -171,9 +171,6 @@ module.exports = function(_path) {
             });
         });
     };
-    
-//--------------------------------------------------------------------------------------------------
-
 };
 
 //--------------------------------------------------------------------------------------------------
