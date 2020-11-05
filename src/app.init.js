@@ -124,7 +124,7 @@
                     );
                 }
                 
-            // Вывод цветов
+            // Цветной вывод текста в консоль
                 if (args[0][i] == 'Colors') {
                     Object.defineProperty($, 'Colors', {
                             value: colors
