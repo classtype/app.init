@@ -1,0 +1,7 @@
+{
+    "private": true,
+    "dependencies": {
+        "app.init": "latest",
+        "telegraf": "latest"
+    }
+}
