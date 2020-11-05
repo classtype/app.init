@@ -3,6 +3,7 @@ require('../src/app.init')(
     [
         'Classtype',// Classtype
         'console.dump',// Модуль для получения дампа объекта
+        'escapeHtml',// Модуль для экранирования спец.симвов
         'JSONFiles',// Модуль для работы с JSON файлами
         'ErrorLog',// Модуль для красивого вывода ошибок в консоль
         'Colors'// Вывод цветов

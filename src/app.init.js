@@ -116,6 +116,14 @@
                     require('console.dump');
                 }
                 
+            // Экранирование спец.симвов
+                if (args[0][i] == 'escapeHtml') {
+                    Object.defineProperty($, 'escapeHtml', {
+                            value: require('./escapeHtml')
+                        }
+                    );
+                }
+                
             // Вывод цветов
                 if (args[0][i] == 'Colors') {
                     Object.defineProperty($, 'Colors', {
