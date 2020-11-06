@@ -37,26 +37,44 @@ $.Bot = {
         });
     },
     
-/*--------------------------------------------------------------------------------------------------
-|
-| -> Обработчики для текста
-|
-|-------------------------------------------------------------------------------------------------*/
-
-    on: function(triggers, callback) {
-        bot.on(triggers, function(ctx) {
+// Слушатель комманды "/start"
+    start: function(callback) {
+        bot.start(function(ctx) {
             $.Bot.exec(ctx, ctx.update.message.chat, callback);
         });
     },
     
-/*--------------------------------------------------------------------------------------------------
-|
-| -> Обработчики для встроенной клавиатуры
-|
-|-------------------------------------------------------------------------------------------------*/
-
-    action: function(triggers, callback) {
-        bot.action(triggers, function(ctx) {
+// Слушатель комманды "/help"
+    help: function(callback) {
+        bot.help(function(ctx) {
+            $.Bot.exec(ctx, ctx.update.message.chat, callback);
+        });
+    },
+    
+// Слушатель команды
+    command: function(command, callback) {
+        bot.command(command, function(ctx) {
+            $.Bot.exec(ctx, ctx.update.message.chat, callback);
+        });
+    },
+    
+// Слушатель строки
+    hears: function(string, callback) {
+        bot.hears(string, function(ctx) {
+            $.Bot.exec(ctx, ctx.update.message.chat, callback);
+        });
+    },
+    
+// Слушатель текста
+    on: function(trigger, callback) {
+        bot.on(trigger, function(ctx) {
+            $.Bot.exec(ctx, ctx.update.message.chat, callback);
+        });
+    },
+    
+// Слушатель встроенной клавиатуры
+    action: function(trigger, callback) {
+        bot.action(trigger, function(ctx) {
             $.Bot.exec(ctx, ctx.update.callback_query.message.chat, callback);
         });
     }
