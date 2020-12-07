@@ -1,4 +1,4 @@
-require('../src/app.init')(
+require('../../src/app.init')(
 // Базовые модули
     [
         'Classtype',// Classtype
