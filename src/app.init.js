@@ -29,6 +29,11 @@
     var loadModules = function(base_path, dirs) {
     // Проходим по списку файлов и папок
         for (var i = 0; i < dirs.length; i++) {
+        // Проверяем на строку
+            if (typeof dirs[i] != 'string') {
+                continue;
+            }
+            
         // Путь к текущему объекту
             var pwd = path.join(base_path, dirs[i]);
             
@@ -140,6 +145,15 @@
     // Только пользовательские модули
         else {
             loadModules(path.dirname(module.parent.filename), args);
+        }
+        
+    // Проходим по списку аргуметов в поисках callback-функций
+    // Это код который выполняется после загрузки всех скрепотов
+        for (var i = 0; i < args.length; i++) {
+        // Проверяем на функцию
+            if (typeof args[i] == 'function') {
+                args[i]();
+            }
         }
     };
     
