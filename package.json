@@ -1,6 +1,6 @@
 {
   "name": "app.init",
-  "version": "1.0.12a",
+  "version": "1.0.13",
   "description": "Модуль для инициализации приложений.",
   "contributors": [
     {
