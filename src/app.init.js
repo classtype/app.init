@@ -152,7 +152,7 @@
         for (var i = 0; i < args.length; i++) {
         // Проверяем на функцию
             if (typeof args[i] == 'function') {
-                args[i]();
+                args[i].call(global.$);
             }
         }
     };
