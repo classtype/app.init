@@ -1,3 +1,6 @@
 .c9
 node_modules
 npm-debug.log
+/start.js
+/examples/telegram/Database/Users/*
+!/examples/telegram/Database/Users/19793244

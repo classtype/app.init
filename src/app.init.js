@@ -129,6 +129,14 @@
                     );
                 }
                 
+            // Телеграм бот
+                if (args[0][i] == 'Bot') {
+                    Object.defineProperty($, 'Bot', {
+                            value: require('./Bot')
+                        }
+                    );
+                }
+                
             // Цветной вывод текста в консоль
                 if (args[0][i] == 'Colors') {
                     Object.defineProperty($, 'Colors', {
