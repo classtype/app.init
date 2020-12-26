@@ -1,13 +1,13 @@
 //--------------------------------------------------------------------------------------------------
 
-var Telegraf = require('telegraf').Telegraf;
-var Extra = require('telegraf/extra');
-var bot = new Telegraf();
-var events = [];
+let Telegraf = require('telegraf').Telegraf;
+let Extra = require('telegraf/extra');
+let bot = new Telegraf();
+let events = [];
 
 //--------------------------------------------------------------------------------------------------
 
-var Bot = class {
+let Bot = class {
 // Конструктор
     constructor(ctx, next) {
         this.ctx = ctx;
@@ -24,16 +24,10 @@ var Bot = class {
     // Приводим к строке
         text += '';
         
-    // Текст не задан
-        if (typeof text != 'string' || text == '') {
-        // Задаем текст который отправил пользователь
-            text = this.text;
-        }
-        
-    // Максимальная длина текста по умолчанию
+    // Максимальная длина строки по умолчанию
         count = count||4096;
         
-    // Обрезает текст до 4096 символов
+    // Обрезаем строку до 4096 символов
     // Это необходимо так как Telegram не будет принимать сообщения привышающие 4096 символов
         text = text.substring(0, 4096);// Первые 4096 символов
         //text = text.substring(text.length - 4096, text.length);// Последние 4096 символов
@@ -84,6 +78,10 @@ var Bot = class {
         return this.ctx.match;
     }
     
+    get button_id() {
+        return this.match && this.match[0];
+    }
+    
 /*--------------------------------------------------------------------------------------------------
 |
 | -> Отправляет ответ на запрос пришедший от встроенной клавиатуры
@@ -119,63 +117,100 @@ var Bot = class {
     }
     
 // Отправляет сообщение
-    send(text, keyboard) {
-        return this.ctx.reply(this.getText(text), this.extra(keyboard));
+    send(text, ...args) {
+        return this.ctx.reply(this.getText(text), this.extra(args));
     }
     
 // Редактирует сообщение
-    edit(text, keyboard) {
-    // Сообщение с клавиатурой
-        if (keyboard) {
-            return this.ctx.editMessageText(this.getText(text), this.extra(keyboard));
+    edit(text, ...args) {
+        return this.ctx.editMessageText(this.getText(text), this.extra(args));
+    }
+
+// Extra
+    extra(args) {
+    // Параметры по умолчанию
+        let p = {
+            html: false,// Включить html-режим
+            resize: false,// Сжать кнопки у клавиатуры
+            oneTime: false,// Скрыть клавиатуру после клика
+            markdown: false,// Включить markdown-разметку
+            webPreview: false,// Включить предпросмотр
+            keyboard: false,// Включить клавиатуру
+        };
+        
+    // Проходим по списку аргуметов
+        for (let i = 0; i < args.length; i++) {
+        // Проходим по параметров
+            for (let param in p) {
+                if (p[param] == false) {
+                    p[param] = (args[i] == param ? true : false);
+                }
+            }
+            
+        // Включить клавиатуру
+            if (Array.isArray(args[i])) {
+                p['keyboard'] = args[i];
+            }
         }
         
     // Сообщение без клавиатуры
-        return this.ctx.editMessageText(this.getText(text));
-    }
-    
-// Extra
-    extra(keyboard) {
-    // Сообщение без клавиатуры
-        if (!keyboard) {
+        if (!p['keyboard']) {
             return;
         }
         
     // Сообщение с клавиатурой
-        else {
-            return Extra.markup(function(m) {
-            // Создаем кнопки
-                let buttons = [];
-                
-            // Одноуровневая клавиатура
-                if (!Array.isArray(keyboard[0][0])) {
-                    for (let i = 0; i < keyboard.length; i++) {
-                        if (keyboard[0][1]) {
-                            buttons.push(m.callbackButton(keyboard[i][0], keyboard[i][1]));
+        return Extra
+        
+    // Html-режим
+        .HTML(p['html'])
+        
+    // Markdown-разметка
+        .markdown(p['markdown'])
+        
+    // Предпросмотр
+        .webPreview(p['webPreview'])
+        
+    // Markup
+        .markup(function(m) {
+        // Сжимаем кнопки у клавиатуры
+            if (p['resize']) {
+                m.resize();
+            }
+            
+        // Скрываем клавиатуру после клика
+            if (p['oneTime']) {
+                m.oneTime();
+            }
+            
+        // Создаем кнопки
+            let buttons = [];
+            
+        // Двухуровневая клавиатура
+            if (Array.isArray(p['keyboard'][0][0])) {
+                for (let i = 0; i < p['keyboard'].length; i++) {
+                    let array = [];
+                    for (let level in p['keyboard'][i]) {
+                        if (p['keyboard'][0][0][1]) {
+                            array.push(m.callbackButton(p['keyboard'][i][level][0], p['keyboard'][i][level][1]));
                         } else {
-                            buttons.push(keyboard[i][0]);
+                            array.push(p['keyboard'][i][level][0]);
                         }
                     }
-                    return keyboard[0][1] ? m.inlineKeyboard(buttons) : m.keyboard(buttons);
+                    buttons.push(array);
                 }
-                
-            // Многоуровненвая клавиатура
-                else {
-                    for (let i = 0; i < keyboard.length; i++) {
-                        let array = [];
-                        for (let level in keyboard[i]) {
-                            if (keyboard[0][0][1]) {
-                                array.push(m.callbackButton(keyboard[i][level][0], keyboard[i][level][1]));
-                            } else {
-                                array.push(keyboard[i][level][0]);
-                            }
-                        }
-                        buttons.push(array);
-                    }
-                    return keyboard[0][0][1] ? m.inlineKeyboard(buttons) : m.keyboard(buttons);
+                return p['keyboard'][0][0][1] ? m.inlineKeyboard(buttons) : m.keyboard(buttons);
+            }
+            
+        // Одноуровневая клавиатура
+            for (let i = 0; i < p['keyboard'].length; i++) {
+                if (p['keyboard'][0][1]) {
+                    buttons.push(m.callbackButton(p['keyboard'][i][0], p['keyboard'][i][1]));
+                } else {
+                    buttons.push(p['keyboard'][i][0]);
                 }
-            });
-        }
+            }
+            return p['keyboard'][0][1] ? m.inlineKeyboard(buttons) : m.keyboard(buttons);
+        });
     }
 };
 
@@ -187,7 +222,7 @@ var Bot = class {
 
 Bot.authorization = function(ctx, next, callback) {
     if (typeof callback == 'function') {
-        var bot = new Bot(ctx, next);
+        let bot = new Bot(ctx, next);
         callback.call(bot, bot);
     }
 };
@@ -203,7 +238,7 @@ Bot.launch = function(config) {
     bot.token = this.token;
     
 // Запускаем слушатели
-    for (var i = 0; i < events.length; i++) {
+    for (let i = 0; i < events.length; i++) {
         events[i].call(this);
     }
     
@@ -216,9 +251,9 @@ Bot.launch = function(config) {
     bot.launch(config);
     
 // Время запуска
-    var date = new Date();
+    let date = new Date();
     
-    var now = {};
+    let now = {};
     now.day = date.getDate();
     now.month = (date.getMonth() + 1);
     now.year = date.getFullYear();
@@ -242,26 +277,12 @@ Bot.launch = function(config) {
 
 /*--------------------------------------------------------------------------------------------------
 |
-| -> Слушатели
+| -> Обработчики
 |
 |-------------------------------------------------------------------------------------------------*/
 
-// Включает тестирование бота
-Bot.test = function(callback) {
-    events.push(() => {
-        bot.on('text', (ctx, next) => {
-            Bot.authorization(ctx, next, function() {
-                this.send(this.text, [
-                    [this.text]
-                ]);
-                callback.call(this, arguments);
-            });
-        });
-    });
-};
-
-// Слушает комманду "/start"
-Bot.start = function(callback) {
+// Обработчик команды "/start"
+Bot.onStart = function(callback) {
     events.push(() => {
         bot.start((ctx, next) => {
             Bot.authorization(ctx, next, callback);
@@ -269,8 +290,8 @@ Bot.start = function(callback) {
     });
 };
 
-// Слушает комманду "/help"
-Bot.help = function(callback) {
+// Обработчик команды "/help"
+Bot.onHelp = function(callback) {
     events.push(() => {
         bot.help((ctx, next) => {
             Bot.authorization(ctx, next, callback);
@@ -278,8 +299,8 @@ Bot.help = function(callback) {
     });
 };
 
-// Слушает комманду "/settings"
-Bot.settings = function(callback) {
+// Обработчик команды "/settings"
+Bot.onSettings = function(callback) {
     events.push(() => {
         bot.settings((ctx, next) => {
             Bot.authorization(ctx, next, callback);
@@ -287,10 +308,10 @@ Bot.settings = function(callback) {
     });
 };
 
-// Слушает любой команду
-Bot.command = function() {
+// Обработчик команд
+Bot.onCommand = function() {
     events.push(() => {
-    // Слушать все комманды
+    // Слушать все команды
         if (typeof arguments[0] == 'function') {
             bot.on('text', (ctx, next) => {
             // Если прислана НЕ команда то выходим
@@ -301,7 +322,7 @@ Bot.command = function() {
             });
         }
         
-    // Слушать одну конкретную комманду
+    // Слушать одну конкретную команду
         else {
             bot.command(arguments[0], (ctx, next) => {
                 Bot.authorization(ctx, next, arguments[1]);
@@ -310,8 +331,8 @@ Bot.command = function() {
     });
 };
 
-// Слушает любой текст
-Bot.text = function() {
+// Обработчик текста
+Bot.onText = function() {
     events.push(() => {
     // Слушать любой текст
         if (typeof arguments[0] == 'function') {
@@ -329,12 +350,22 @@ Bot.text = function() {
     });
 };
 
-// Слушает встроенную клавиатуру
-Bot.action = function(trigger, callback) {
+// Обработчик кнопок со встроенной клавиатуры
+Bot.onClick = function() {
     events.push(() => {
-        bot.action(trigger, (ctx, next) => {
-            Bot.authorization(ctx, next, callback);
-        });
+    // Слушать все кнопки
+        if (typeof arguments[0] == 'function') {
+            bot.action(/.+/, (ctx, next) => {
+                Bot.authorization(ctx, next, arguments[0]);
+            });
+        }
+        
+    // Слушать одну конкретную кнопку
+        else {
+            bot.action(arguments[0], (ctx, next) => {
+                Bot.authorization(ctx, next, arguments[1]);
+            });
+        }
     });
 };
 

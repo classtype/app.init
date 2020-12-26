@@ -15,14 +15,13 @@ require('../../src/app.init')(
     [
         './Class',// Базовые классы
         './Modules',// Модули
-        './events.js'// Список слушателей
-    ],
-    
-// Post-callback
-    function() {
-        this.Bot.token = process.env.BOT_TOKEN||'1234567890:AbCdefGhIJKlmNoPQRsTUVwxyZ';
-        this.Bot.launch();// Запускаем бота
-    }
+        './events.js'// Обработчики
+    ]
 );
+
+//--------------------------------------------------------------------------------------------------
+
+$.Bot.token = process.env.BOT_TOKEN||'1234567890:AbCdefGhIJKlmNoPQRsTUVwxyZ';
+$.Bot.launch();// Запускаем бота
 
 //--------------------------------------------------------------------------------------------------

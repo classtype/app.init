@@ -29,11 +29,6 @@
     var loadModules = function(base_path, dirs) {
     // Проходим по списку файлов и папок
         for (var i = 0; i < dirs.length; i++) {
-        // Проверяем на строку
-            if (typeof dirs[i] != 'string') {
-                continue;
-            }
-            
         // Путь к текущему объекту
             var pwd = path.join(base_path, dirs[i]);
             
@@ -110,10 +105,7 @@
                 
             // Работа с JSON файлами
                 if (args[0][i] == 'JSONFiles') {
-                    Object.defineProperty($, 'JSONFiles', {
-                            value: require('./JSONFiles')
-                        }
-                    );
+                    $.JSONFiles = require('./JSONFiles');
                 }
                 
             // Получения дампа объекта
@@ -123,26 +115,19 @@
                 
             // Экранирование спец.симвов
                 if (args[0][i] == 'escapeHtml') {
-                    Object.defineProperty($, 'escapeHtml', {
-                            value: require('./escapeHtml')
-                        }
-                    );
+                    $.escapeHtml = require('./escapeHtml');
                 }
                 
             // Телеграм бот
                 if (args[0][i] == 'Bot') {
-                    Object.defineProperty($, 'Bot', {
-                            value: require('./Bot')
-                        }
-                    );
+                    $.ErrorLog = ErrorLog;
+                    $.Colors = colors;
+                    $.Bot = require('./Bot');
                 }
                 
             // Цветной вывод текста в консоль
                 if (args[0][i] == 'Colors') {
-                    Object.defineProperty($, 'Colors', {
-                            value: colors
-                        }
-                    );
+                    $.Colors = colors;
                 }
             }
             
@@ -153,15 +138,6 @@
     // Только пользовательские модули
         else {
             loadModules(path.dirname(module.parent.filename), args);
-        }
-        
-    // Проходим по списку аргуметов в поисках callback-функций
-    // Это код выполняется после загрузки всех скрепотов
-        for (var i = 0; i < args.length; i++) {
-        // Проверяем на функцию
-            if (typeof args[i] == 'function') {
-                args[i].call(global.$);
-            }
         }
     };
     
