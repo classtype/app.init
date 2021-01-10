@@ -25,7 +25,7 @@ $.Bot.authorization = function(ctx, next, callback) {
         
     // Возвращаем информацию о пользователе
         if (typeof callback == 'function') {
-            var bot = new $.Bot(ctx);
+            let bot = new $.Bot(ctx, next, callback);
             callback.call(bot, bot, new ($.User || $.Users)(userInfo));
         }
     });
@@ -38,9 +38,21 @@ $.Bot.authorization = function(ctx, next, callback) {
 |-------------------------------------------------------------------------------------------------*/
 
 $.Users = class {
+// Список полей по умолчанию
+    static defaultInfo = {
+        user_id: 0,// ID пользователя
+        username: '',// Псевдоним пользователя
+        first_name: ''// Имя пользователя
+    }
+    
 // Конструктор
     constructor(userInfo) {
         this.userInfo = userInfo;// Сохраняем информацию о пользователе
+    }
+    
+// Сохранить изменения в БД
+    save(callback) {
+        $.Users.set(this.userInfo, callback);
     }
     
 // ID пользователя
@@ -48,20 +60,7 @@ $.Users = class {
         return this.userInfo['user_id'];
     }
 };
- 
-/*--------------------------------------------------------------------------------------------------
-|
-| -> Список полей по умолчанию
-|
-|-------------------------------------------------------------------------------------------------*/
 
-$.Users.defaultInfo = {
-    user_id: 0,// ID пользователя
-    username: '',// Псевдоним пользователя
-    first_name: '',// Имя пользователя
-    message_id: 0// ID последнего сообщения от бота
-};
-    
 /*--------------------------------------------------------------------------------------------------
 |
 | -> Задает поля по умолчанию
@@ -72,17 +71,26 @@ $.Users.setDefaultInfo = function(userInfo) {
 // Создаем список полей
     userInfo = typeof userInfo == 'object' ? userInfo : {};
     
-// Проходим по списку полей по умолчанию
-    for (var field in $.Users.defaultInfo) {
+// Проходим по списку полей по умолчанию для Users
+    for (let field in $.Users.defaultInfo) {
         if (typeof userInfo[field] == 'undefined') {
             userInfo[field] = $.Users.defaultInfo[field];
+        }
+    }
+    
+// Проходим по списку полей по умолчанию для User
+    if ($.User && typeof $.User.defaultInfo == 'object') {
+        for (let field in $.User.defaultInfo) {
+            if (typeof userInfo[field] == 'undefined') {
+                userInfo[field] = $.User.defaultInfo[field];
+            }
         }
     }
     
 // Возвращаем результат
     return userInfo;
 };
-    
+
 /*--------------------------------------------------------------------------------------------------
 |
 | -> Создает нового пользователя
@@ -91,7 +99,7 @@ $.Users.setDefaultInfo = function(userInfo) {
 
 $.Users.add = function(chat, callback) {
 // Создаем список полей
-    var userInfo = {};
+    let userInfo = {};
     
 // Добавляем поля присланные от Telegram
     userInfo['user_id'] = chat['id'];// ID пользователя
@@ -120,7 +128,7 @@ $.Users.add = function(chat, callback) {
         }
     });
 };
-    
+
 /*--------------------------------------------------------------------------------------------------
 |
 | -> Получает информацию о пользователе
@@ -149,16 +157,16 @@ $.Users.get = function(chat, callback) {
     |---------------------------------------------*/
     
     // Флаг изменений
-        var isUpdate = false;
+        let isUpdate = false;
         
     // Список полей которые нужно обновить
-        var fields = [
+        let fields = [
             'username',// Псевдоним пользователя
             'first_name'// Имя пользователя
         ];
         
     // Проходим по списку полей
-        for (var i = 0; i < fields.length; i++) {
+        for (let i = 0; i < fields.length; i++) {
         // Поле изменилось
             if (chat[fields[i]] != userInfo[fields[i]]) {
                 userInfo[fields[i]] = chat[fields[i]];
@@ -179,7 +187,7 @@ $.Users.get = function(chat, callback) {
         }
     });
 };
-    
+
 /*--------------------------------------------------------------------------------------------------
 |
 | -> Сохраняет информацию о пользователе

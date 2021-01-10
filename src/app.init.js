@@ -15,6 +15,11 @@
         ErrorLog(error);
     });
     
+// Добавляем обработчик на обработку исключений для Promise
+    process.on('unhandledRejection', function(error) {
+        ErrorLog(error);
+    });
+    
 // Переопределяем $
     global.$ = {};
     

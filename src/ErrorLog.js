@@ -11,6 +11,15 @@
 
 module.exports = function(error) {
     var stack = require('./stackTrace').parse(error);
+    
+    if (!stack || !stack[0]) {
+        console.log(
+            colors.bgRed('Ошибка! В "new Promise" не указан ".catch()"')
+        );
+        console.log(error);
+        return;
+    }
+    
     var fileName = stack[0].fileName;
     var lineNumber = stack[0].lineNumber;
     var columnNumber = stack[0].columnNumber - 1;

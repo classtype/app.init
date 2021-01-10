@@ -1,6 +1,6 @@
 {
     "name": "app.init",
-    "version": "1.0.16",
+    "version": "1.0.17",
     "description": "Модуль для инициализации приложений.",
     "contributors": [
         {
@@ -37,6 +37,6 @@
         "ct": "latest",
         "console.dump": "latest",
         "colors": "1.0.3",
-        "telegraf": "latest"
+        "telegraf": "3.38.0"
     }
 }

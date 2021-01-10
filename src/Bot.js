@@ -110,7 +110,7 @@ let Bot = class {
 | -> Работа с сообщениями
 |
 |-------------------------------------------------------------------------------------------------*/
-    
+
 // Удаляет сообщение
     remove(message_id) {
         return this.ctx.deleteMessage(message_id);
@@ -125,7 +125,7 @@ let Bot = class {
     edit(text, ...args) {
         return this.ctx.editMessageText(this.getText(text), this.extra(args));
     }
-
+    
 // Extra
     extra(args) {
     // Параметры по умолчанию
@@ -246,7 +246,7 @@ Bot.launch = function(config) {
     bot.catch(function(err, ctx) {
         $.ErrorLog(err);
     });
-
+    
 // Запуск бота
     bot.launch(config);
     
