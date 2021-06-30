@@ -1,6 +1,7 @@
 .c9
 node_modules
 npm-debug.log
+test
 /start.js
 /examples/*/Database/Users/*
 !/examples/*/Database/Users/19793244

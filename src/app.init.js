@@ -3,9 +3,7 @@
     var fs = require('fs');
     var path = require('path');
     var colors = require('colors/safe');
-    
-// Выводит ошибку в консоль
-    var ErrorLog = require('./ErrorLog');
+    var ErrorLog = require('app.errorlog');// Выводит ошибку в консоль
     
 //--------------------------------------------------------------------------------------------------
 
@@ -17,6 +15,7 @@
     
 // Добавляем обработчик на обработку исключений для Promise
     process.on('unhandledRejection', function(error) {
+    // Выводим ошибку в консоль
         ErrorLog(error);
     });
     
@@ -108,9 +107,9 @@
                     $.ErrorLog = ErrorLog;
                 }
                 
-            // Работа с JSON файлами
-                if (args[0][i] == 'JSONFiles') {
-                    $.JSONFiles = require('./JSONFiles');
+            // Работа с файлами
+                if (args[0][i] == 'File') {
+                    $.File = require('app.file');
                 }
                 
             // Получения дампа объекта
