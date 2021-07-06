@@ -1,6 +1,6 @@
 {
     "name": "app.init",
-    "version": "1.0.18",
+    "version": "1.0.19",
     "description": "Модуль для инициализации приложений.",
     "contributors": [
         {
@@ -35,11 +35,9 @@
     ],
     "dependencies": {
         "app.file": "1.0.3",
-        "app.errorlog": "1.0.1",
+        "app.errorlog": "1.0.2",
         "colors": "1.4.0",
         "console.dump": "1.0.1",
-        "ct": "1.0.6",
-        "stack-trace": "0.0.10",
         "telegraf": "3.38.0"
     }
 }

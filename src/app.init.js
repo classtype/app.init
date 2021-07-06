@@ -80,28 +80,6 @@
         if (typeof args[0] == 'object') {
         // Проходим по списку базовых модулей
             for (var i = 0; i < args[0].length; i++) {
-            // Classtype
-                if (args[0][i] == 'Classtype') {
-                // Для создания динамических классов
-                    Object.defineProperty($, 'CT', {
-                            value: require('ct')
-                        }
-                    );
-                // Для создания статических классов
-                    Object.defineProperty($, 'extend', {
-                            value: $.CT.static.extend
-                        }
-                    );
-                }
-                
-            // Для создания статических классов
-                if (args[0][i] == 'extend') {
-                    Object.defineProperty($, 'extend', {
-                            value: require('ct').static.extend
-                        }
-                    );
-                }
-                
             // Выводит ошибку в консоль
                 if (args[0][i] == 'ErrorLog') {
                     $.ErrorLog = ErrorLog;
