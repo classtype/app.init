@@ -10,13 +10,13 @@
 // Добавляем обработчик на обработку исключений
     process.on('uncaughtException', function(error) {
     // Выводим ошибку в консоль
-        ErrorLog(error, module.filename);
+        ErrorLog(error, module.filename, process.mainModule.filename);
     });
     
 // Добавляем обработчик на обработку исключений для Promise
     process.on('unhandledRejection', function(error) {
     // Выводим ошибку в консоль
-        ErrorLog(error, module.filename);
+        ErrorLog(error, module.filename, process.mainModule.filename);
     });
     
 // Переопределяем $
