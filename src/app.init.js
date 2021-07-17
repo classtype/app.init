@@ -2,31 +2,73 @@
 
     var fs = require('fs');
     var path = require('path');
-    var colors = require('colors/safe');
-    var ErrorLog = require('app.errorlog');// Выводит ошибку в консоль
+    var ErrorLog = require('app.errorlog');
+    var stackTrace = require('stack-trace');
     
 //--------------------------------------------------------------------------------------------------
 
 // Добавляем обработчик на обработку исключений
     process.on('uncaughtException', function(error) {
     // Выводим ошибку в консоль
-        ErrorLog(error);
+        ErrorLog(error, module.filename);
     });
     
 // Добавляем обработчик на обработку исключений для Promise
     process.on('unhandledRejection', function(error) {
     // Выводим ошибку в консоль
-        ErrorLog(error);
+        ErrorLog(error, module.filename);
     });
     
 // Переопределяем $
     global.$ = {};
     
-// Возвращает фатальную ошибку и останавливает процесс
-    var fatalError = function(error, msg) {
-        console.log(colors.bgRed('Ошибка: '+error));
-        console.log(colors.bgBlue('Подсказка: '+msg));
-        process.exit();
+// Поиск подстроки "searchString" в файле "fileName"
+    var include = (message, fileName, searchString) => {
+    // Стек ошибки
+        let stack = stackTrace.parse(new Error);
+        
+        for (let i = 0; i < stack.length; i++) {
+            if (stack[i]['fileName'] == fileName) {
+            // Строка с ошибкой
+                let line = stack[i].lineNumber;
+                
+            // Позиция в строке с ошибкой
+                let column = stack[i].columnNumber;
+                
+            // Содержимое файла с ошибкой
+                let content = fs.readFileSync(stack[i].fileName).toString().split('\n');
+                
+                for (let i = line - 1; i < content.length; i++) {
+                // Начальная позиция
+                    let start = content[i].indexOf(searchString, column);
+                    
+                // Сбрасываем позицию
+                // так как поиск последующих строк всегда идет с нулевой позиции
+                    column = 0;
+                    
+                    if (start != -1) {
+                    // Лог
+                        let log = '';
+                        
+                    // Сообщение об ошибке
+                        log += ErrorLog.msg(message+"'"+searchString+"'", fileName);
+                        
+                    // Выделение ошибки в файле
+                        log += ErrorLog.highlight(
+                            fileName,// Путь
+                            i + 1,// Номер строки
+                            start,// Начальная позиция
+                            start + searchString.length// Конечная позиция
+                        );
+                        
+                    // Выводим в консоль
+                        console.log(log + '\n');
+                        process.exit();
+                        //return;
+                    }
+                }
+            }
+        }
     };
     
 // Загружает модули
@@ -38,9 +80,10 @@
             
         // Проверяем объект на существование
             if (!fs.existsSync(pwd)) {
-                fatalError(
-                    'Такого пути не существует: "'+pwd+'"',
-                    'Возможно вы указали неверный путь в файле: "'+process.mainModule.filename+'"'
+                include(
+                    'Модуль не найден:',
+                    process.mainModule.filename,
+                    dirs[i]
                 );
             }
             
@@ -52,14 +95,6 @@
             
         // Файл
             else {
-            // Расширение файла не .js
-                if (pwd.substr(-3) != '.js') {
-                    fatalError(
-                        'Неверный тип файла: "'+pwd+'"',
-                        'Доступны файлы только с расширением *.js'
-                    );
-                }
-                
             // Загружаем модуль
                 require(pwd);
             }
@@ -103,13 +138,13 @@
             // Телеграм бот
                 if (args[0][i] == 'Bot') {
                     $.ErrorLog = ErrorLog;
-                    $.Colors = colors;
+                    $.Colors = require('colors/safe');
                     $.Bot = require('./Bot');
                 }
                 
             // Цветной вывод текста в консоль
                 if (args[0][i] == 'Colors') {
-                    $.Colors = colors;
+                    $.Colors = require('colors/safe');
                 }
             }
             
