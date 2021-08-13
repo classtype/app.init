@@ -19,8 +19,11 @@
         ErrorLog(error, module.filename, process.mainModule.filename);
     });
     
-// Переопределяем $
+// Переопределяем "$"
     global.$ = {};
+    
+// Переопределяем "_"
+    require('./_');
     
 // Поиск подстроки "searchString" в файле "fileName"
     var include = (message, fileName, searchString) => {
