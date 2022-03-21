@@ -46,6 +46,15 @@ _`${null}`                    // Вывод в консоль: null
 _=null                        // Вывод в консоль: null
 _(null)                       // Вывод в консоль: null
 
+----------------------------------------------------------------------------------------------------
+
+Отличие:
+_= 'Hello world!'
+__= 'Hello world!'
+
+"_="  — Просто выводит текст в консоль.
+"__=" — Все тоже самое, плюс process.exit()
+
 --------------------------------------------------------------------------------------------------*/
 
 // Переопределяем "_"
@@ -71,6 +80,35 @@ Object.defineProperty(global, '_', {
         // Для правильного вывода других типов
         // все кроме строк, например чисел
             console.log(result+'' == args[1]+'' ? args[1] : result);
+        };
+    }
+});
+
+// Переопределяем "__"
+Object.defineProperty(global, '__', {
+    set: (log) => {
+        console.log(log);
+        process.exit();
+    },
+    get: () => {
+        return (...args) => {
+            if (!Array.isArray(args[0])) {
+                console.log(args[0]);
+                return;
+            }
+            
+            let result = '';
+            
+            for (let i = 1; i < args.length; i++) {
+                result += args[i] + args[0][i];
+            }
+            
+            result = args[0][0] + result;
+            
+        // Для правильного вывода других типов
+        // все кроме строк, например чисел
+            console.log(result+'' == args[1]+'' ? args[1] : result);
+            process.exit();
         };
     }
 });
