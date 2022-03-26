@@ -10,13 +10,13 @@
 // Добавляем обработчик на обработку исключений
     process.on('uncaughtException', function(error) {
     // Выводим ошибку в консоль
-        ErrorLog(error, module.filename, process.mainModule.filename);
+        ErrorLog(error, module.filename);
     });
     
 // Добавляем обработчик на обработку исключений для Promise
     process.on('unhandledRejection', function(error) {
     // Выводим ошибку в консоль
-        ErrorLog(error, module.filename, process.mainModule.filename);
+        ErrorLog(error, module.filename);
     });
     
 // Переопределяем "$"
@@ -24,6 +24,9 @@
     
 // Переопределяем "_"
     require('./_');
+    
+// Переопределяем "__path"
+    $.__path = require('./__path');
     
 // Поиск подстроки "searchString" в файле "fileName"
     var include = (message, fileName, searchString) => {
@@ -123,9 +126,14 @@
                     $.ErrorLog = ErrorLog;
                 }
                 
-            // Работа с файлами
+            // Работа с файлом
                 if (args[0][i] == 'File') {
-                    $.File = require('app.file');
+                    $.File = require('app.file').file;
+                }
+                
+            // Работа с файлами
+                if (args[0][i] == 'Files') {
+                    $.Files = require('app.file');
                 }
                 
             // Получения дампа объекта

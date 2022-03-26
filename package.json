@@ -1,11 +1,10 @@
 {
     "name": "app.init",
-    "version": "1.0.24",
+    "version": "1.0.25",
     "description": "Модуль для инициализации приложений.",
     "contributors": [
         {
-            "name": "Sergei Korenkov",
-            "email": "classtype@mail.ru"
+            "name": "Sergei"
         },
         {
             "name": "Aleksandr Balyunov",
@@ -34,8 +33,8 @@
         "init"
     ],
     "dependencies": {
-        "app.errorlog": "1.0.5",
-        "app.file": "1.0.3",
+        "app.errorlog": "1.0.8",
+        "app.file": "1.0.6",
         "colors": "1.4.0",
         "console.dump": "1.0.1",
         "stack-trace": "0.0.10",
